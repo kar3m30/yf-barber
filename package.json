@@ -6,5 +6,5 @@
   "main":"server.js",
   "scripts":{"start":"node server.js"},
   "engines":{"node":">=20"},
-  "dependencies":{"express":"^5.1.0","sqlite3":"^5.1.7"}
+  "dependencies":{"express":"^5.1.0","@libsql/client":"^0.15.15"}
 }
