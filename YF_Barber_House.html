@@ -493,6 +493,32 @@ pushKnownBookings.clear();
 
 adminRender();
 await loadAdminUsers();
-await checkPushStatus();}catch{adminToken='';sessionStorage.removeItem('yf_admin_token')}}}else{try{const b=await loadMyBooking();if(b){renderFullPass(b);$('mine').textContent='#'+b.queue}}catch{}await refreshQueue();setInterval(refreshQueue,3000)}setInterval(async()=>{if($('admin').classList.contains('active')&&adminUnlocked){try{await loadBookings($('date').value);adminRender()}catch{}}},4000)})();
+await checkPushStatus();}catch{adminToken='';sessionStorage.removeItem('yf_admin_token')}}}else{try{const b=await loadMyBooking();if(b){renderFullPass(b);$('mine').textContent='#'+b.queue}}catch{}await refreshQueue();setInterval(refreshQueue,3000)}setInterval(async()=>{
+
+  if (
+    $('admin').classList.contains('active') &&
+    adminUnlocked
+  ) {
+
+    try {
+      await loadBookings(
+        $('date').value
+      );
+
+      adminRender();
+
+    } catch {}
+  }
+
+},4000);
+
+
+/*
+  فحص الحجوزات الجديدة كل 5 ثوانٍ
+*/
+setInterval(
+  checkForNewBookings,
+  5000
+);
 
 </script></html>
