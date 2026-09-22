@@ -444,7 +444,26 @@ async function loadAdminUsers(){if(!adminUser||adminUser.role!=='owner'){$('user
 window.toggleAdminUser=async(id,active)=>{try{await api('/admin/users/'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify({active})});await loadAdminUsers();toast(active?'تم تفعيل المستخدم':'تم تعطيل المستخدم')}catch(e){toast(e.message)}};
 window.deleteAdminUser=async id=>{if(!confirm('هل تريد حذف هذا المستخدم؟'))return;try{await api('/admin/users/'+encodeURIComponent(id),{method:'DELETE'});await loadAdminUsers();toast('تم حذف المستخدم')}catch(e){toast(e.message)}};
 $('addAdminUser').onclick=async()=>{try{await api('/admin/users',{method:'POST',body:JSON.stringify({username:$('newAdminUsername').value.trim(),name:$('newAdminName').value.trim(),password:$('newAdminPassword').value})});$('newAdminUsername').value='';$('newAdminName').value='';$('newAdminPassword').value='';await loadAdminUsers();toast('تمت إضافة المستخدم')}catch(e){toast(e.message)}};
-$('gateLogin').onclick=async()=>{const username=$('gateUsername').value.trim();const password=$('gatePassword').value;try{const d=await api('/admin/login',{method:'POST',body:JSON.stringify({username,password})});adminToken=d.token;adminUser=d.user;sessionStorage.setItem('yf_admin_token',adminToken);adminUnlocked=true;$('gateError').textContent='';$('adminGate').classList.add('hidden');$('adminLockMsg').textContent='🔓 تم فتح لوحة التحكم باسم '+d.user.name;await loadBookings($('date').value);adminRender();await loadAdminUsers();toast('تم فتح لوحة التحكم بنجاح')}catch(e){$('gateError').textContent=e.message||'بيانات الدخول غير صحيحة'}};
+$('gateLogin').onclick=async()=>{const username=$('gateUsername').value.trim();const password=$('gatePassword').value;try{const d=await api('/admin/login',{method:'POST',body:JSON.stringify({username,password})});adminToken=d.token;adminUser=d.user;sessionStorage.setItem('yf_admin_token',adminToken)adminUnlocked=true;
+$('gateError').textContent='';
+$('adminGate').classList.add('hidden');
+$('adminLockMsg').textContent='🔓 تم فتح لوحة التحكم باسم '+d.user.name;
+
+await loadBookings($('date').value);
+
+pushKnownBookings.clear();
+
+(bookings || []).forEach(b => {
+  if (b.id) {
+    pushKnownBookings.add(b.id);
+  }
+});
+
+adminRender();
+await loadAdminUsers();
+await checkPushStatus();
+
+toast('تم فتح لوحة التحكم بنجاح');}catch(e){$('gateError').textContent=e.message||'بيانات الدخول غير صحيحة'}};
 $('gateUsername').addEventListener('keydown',e=>{if(e.key==='Enter')$('gatePassword').focus()});
 $('gatePassword').addEventListener('keydown',e=>{if(e.key==='Enter')$('gateLogin').click()});
 $('logoutAdmin').onclick=()=>{adminUnlocked=false;adminToken='';sessionStorage.removeItem('yf_admin_token');$('adminGate').classList.remove('hidden');$('gateUsername').value='';$('gatePassword').value='';$('gateError').textContent='';adminUser=null;stopScanner()};
