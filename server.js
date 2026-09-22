@@ -1256,27 +1256,12 @@ app.get('/{*splat}', (req, res) => {
 /* =========================
    تشغيل السيرفر
 ========================= */
-
 init()
   .then(() => {
-    app.listen(
-      PORT,
-      () => {
-        console.log(
-          `YF Online running on port ${PORT}`
-        );
-      }
-    );
+    console.log('YF database initialized');
   })
   .catch(err => {
-    console.error(
-      'Database initialization failed:',
-      err
-    );
-
-    process.exit(1);
+    console.error('Database initialization failed:', err);
   });
-  }
-});}
-  }
-);
+
+module.exports = app;
