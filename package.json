@@ -1,0 +1,10 @@
+{
+  "name":"yf-yousef-farouk-online",
+  "version":"2.0.0",
+  "private":true,
+  "description":"يوسف فاروق - Barber Booking",
+  "main":"server.js",
+  "scripts":{"start":"node server.js"},
+  "engines":{"node":">=20"},
+  "dependencies":{"@libsql/client":"^0.15.9","express":"^5.1.0"}
+}
