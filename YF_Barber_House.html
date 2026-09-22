@@ -476,6 +476,23 @@ async function decodeImage(file){if(!('BarcodeDetector' in window)){scanMessage(
 async function startScanner(){if(!('BarcodeDetector' in window)){scanMessage('قارئ QR غير مدعوم في هذا المتصفح. استخدم Chrome حديثًا.',false);return}if(!navigator.mediaDevices?.getUserMedia){scanMessage('الكاميرا غير متاحة في هذا المتصفح.',false);return}try{scanStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});$('qrVideo').srcObject=scanStream;await $('qrVideo').play();const detector=new BarcodeDetector({formats:['qr_code']});const video=$('qrVideo'),canvas=$('scanCanvas'),ctx=canvas.getContext('2d',{willReadFrequently:true});clearInterval(scanTimer);scanTimer=setInterval(async()=>{if(video.readyState<2)return;canvas.width=video.videoWidth;canvas.height=video.videoHeight;ctx.drawImage(video,0,0,canvas.width,canvas.height);try{const codes=await detector.detect(canvas);if(codes.length){showScannedBooking(await findBookingFromToken(codes[0].rawValue));stopScanner()}}catch(e){}},350);scanMessage('الكاميرا تعمل — وجّهها إلى QR العميل.',true)}catch(e){scanMessage('تعذر تشغيل الكاميرا. اسمح بالوصول للكاميرا وتأكد أن الموقع يعمل عبر HTTPS.',false)}}
 function stopScanner(){clearInterval(scanTimer);scanTimer=null;if(scanStream){scanStream.getTracks().forEach(t=>t.stop());scanStream=null}const v=$('qrVideo');if(v)v.srcObject=null}
 $('startScan').onclick=startScanner;$('stopScan').onclick=stopScanner;$('qrFile').onchange=e=>{if(e.target.files[0])decodeImage(e.target.files[0])};
-(async()=>{if(adminRoute){$('admin').classList.add('active');$('adminGate').classList.remove('hidden');if(adminToken){try{const me=await api('/admin/me');adminUser=me.user;adminUnlocked=true;$('adminGate').classList.add('hidden');$('adminLockMsg').textContent='🔓 تم فتح لوحة التحكم باسم '+adminUser.name;await loadBookings($('date').value);adminRender();await loadAdminUsers()}catch{adminToken='';sessionStorage.removeItem('yf_admin_token')}}}else{try{const b=await loadMyBooking();if(b){renderFullPass(b);$('mine').textContent='#'+b.queue}}catch{}await refreshQueue();setInterval(refreshQueue,3000)}setInterval(async()=>{if($('admin').classList.contains('active')&&adminUnlocked){try{await loadBookings($('date').value);adminRender()}catch{}}},4000)})();
+(async()=>{if(adminRoute){$('admin').classList.add('active');$('adminGate').classList.remove('hidden');if(adminToken){try{const me=await api('/admin/me')adminUser=me.user;
+adminUnlocked=true;
+$('adminGate').classList.add('hidden');
+$('adminLockMsg').textContent='🔓 تم فتح لوحة التحكم باسم '+adminUser.name;
+
+await loadBookings($('date').value);
+
+pushKnownBookings.clear();
+
+(bookings || []).forEach(b => {
+  if (b.id) {
+    pushKnownBookings.add(b.id);
+  }
+});
+
+adminRender();
+await loadAdminUsers();
+await checkPushStatus();}catch{adminToken='';sessionStorage.removeItem('yf_admin_token')}}}else{try{const b=await loadMyBooking();if(b){renderFullPass(b);$('mine').textContent='#'+b.queue}}catch{}await refreshQueue();setInterval(refreshQueue,3000)}setInterval(async()=>{if($('admin').classList.contains('active')&&adminUnlocked){try{await loadBookings($('date').value);adminRender()}catch{}}},4000)})();
 
 </script></html>
