@@ -78,7 +78,349 @@
 </div><div class="toast" id="toast"></div>
 <div id="adminGate" class="adminGate hidden"><div class="adminGateBox"><div class="lux">يوسف فاروق</div><h2 style="font:600 30px Georgia;margin:8px 0">دخول لوحة التحكم</h2><p class="status">هذه المنطقة خاصة بالحلاق والإدارة</p><input id="gateUsername" type="text" autocomplete="username" placeholder="اسم المستخدم"><input id="gatePassword" type="password" autocomplete="current-password" placeholder="كلمة المرور"><button id="gateLogin">دخول آمن</button><p id="gateError" style="color:#e6b7a8;margin:12px 0 0"></p></div></div><script>
 const $=id=>document.getElementById(id);
-const API='/api';
+const API='/api';/* =========================
+   YF PUSH NOTIFICATIONS
+========================= */
+
+let pushRegistration = null;
+let pushSubscription = null;
+let pushKnownBookings = new Set();
+
+async function registerPushServiceWorker() {
+  if (!('serviceWorker' in navigator)) {
+    throw new Error('هذا المتصفح لا يدعم إشعارات الهاتف.');
+  }
+
+  pushRegistration =
+    await navigator.serviceWorker.register('/sw.js');
+
+  await navigator.serviceWorker.ready;
+
+  return pushRegistration;
+}
+
+function base64ToUint8Array(base64String) {
+  const padding = '='.repeat(
+    (4 - base64String.length % 4) % 4
+  );
+
+  const base64 =
+    (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+  const rawData =
+    atob(base64);
+
+  return Uint8Array.from(
+    [...rawData].map(char =>
+      char.charCodeAt(0)
+    )
+  );
+}
+
+async function enablePushNotifications(
+  showMessage = true
+) {
+  try {
+    if (!adminUnlocked || !adminToken) {
+      if (showMessage) {
+        toast('افتح لوحة الإدارة أولًا');
+      }
+      return false;
+    }
+
+    if (!('Notification' in window)) {
+      if (showMessage) {
+        toast('هذا المتصفح لا يدعم الإشعارات');
+      }
+      return false;
+    }
+
+    if (!('serviceWorker' in navigator)) {
+      if (showMessage) {
+        toast('المتصفح لا يدعم إشعارات الهاتف');
+      }
+      return false;
+    }
+
+    const permission =
+      await Notification.requestPermission();
+
+    if (permission !== 'granted') {
+      if (showMessage) {
+        toast('لم يتم السماح بالإشعارات');
+      }
+      return false;
+    }
+
+    const keyData =
+      await api('/push/public-key');
+
+    if (!keyData.publicKey) {
+      throw new Error(
+        'إشعارات الهاتف غير مفعلة على الخادم'
+      );
+    }
+
+    const registration =
+      await registerPushServiceWorker();
+
+    pushSubscription =
+      await registration.pushManager.getSubscription();
+
+    if (!pushSubscription) {
+      pushSubscription =
+        await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey:
+            base64ToUint8Array(
+              keyData.publicKey
+            )
+        });
+    }
+
+    await api('/push/subscribe', {
+      method: 'POST',
+      body: JSON.stringify({
+        subscription: pushSubscription.toJSON()
+      })
+    });
+
+    const btn =
+      $('enablePushBtn');
+
+    if (btn) {
+      btn.textContent =
+        '🔔 إشعارات الهاتف مفعلة';
+      btn.disabled = true;
+    }
+
+    if (showMessage) {
+      toast(
+        'تم تفعيل إشعارات الحجوزات على الهاتف'
+      );
+    }
+
+    return true;
+
+  } catch (e) {
+    console.error(
+      'Push notification error:',
+      e
+    );
+
+    if (showMessage) {
+      toast(
+        e.message ||
+        'تعذر تفعيل إشعارات الهاتف'
+      );
+    }
+
+    return false;
+  }
+}
+
+async function checkPushStatus() {
+  try {
+    if (
+      !adminUnlocked ||
+      !('serviceWorker' in navigator)
+    ) {
+      return;
+    }
+
+    const registration =
+      await navigator.serviceWorker.ready;
+
+    const sub =
+      await registration.pushManager.getSubscription();
+
+    if (sub) {
+      pushSubscription = sub;
+
+      const btn =
+        $('enablePushBtn');
+
+      if (btn) {
+        btn.textContent =
+          '🔔 إشعارات الهاتف مفعلة';
+        btn.disabled = true;
+      }
+    }
+  } catch (e) {
+    console.log(
+      'Push status check skipped'
+    );
+  }
+}
+
+async function playBookingSound() {
+  try {
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    const ctx =
+      new AudioContext();
+
+    if (ctx.state === 'suspended') {
+      await ctx.resume();
+    }
+
+    const oscillator =
+      ctx.createOscillator();
+
+    const gain =
+      ctx.createGain();
+
+    oscillator.type = 'sine';
+
+    oscillator.frequency.setValueAtTime(
+      880,
+      ctx.currentTime
+    );
+
+    oscillator.frequency.setValueAtTime(
+      1175,
+      ctx.currentTime + 0.12
+    );
+
+    gain.gain.setValueAtTime(
+      0.0001,
+      ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.18,
+      ctx.currentTime + 0.02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.0001,
+      ctx.currentTime + 0.45
+    );
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+      ctx.currentTime + 0.45
+    );
+
+    setTimeout(() => {
+      try {
+        ctx.close();
+      } catch {}
+    }, 700);
+
+  } catch (e) {
+    console.log(
+      'Sound notification unavailable'
+    );
+  }
+}
+
+function showNewBookingNotification(
+  booking
+) {
+  const message =
+    `حجز جديد: ${booking.name} — الدور #${booking.queue}`;
+
+  toast(
+    '🔔 ' +
+    message
+  );
+
+  playBookingSound();
+
+  if (
+    'Notification' in window &&
+    Notification.permission === 'granted'
+  ) {
+    try {
+      new Notification(
+        'حجز جديد — يوسف فاروق',
+        {
+          body:
+            `${booking.name} حجز ${booking.service}\n` +
+            `الدور #${booking.queue} · ${booking.time}`,
+          tag:
+            'yf-booking-' +
+            booking.id
+        }
+      );
+    } catch {}
+  }
+}
+
+async function checkForNewBookings() {
+  if (
+    !adminUnlocked ||
+    !adminToken ||
+    !$('admin')?.classList.contains('active')
+  ) {
+    return;
+  }
+
+  try {
+    const data =
+      await api(
+        '/bookings?date=' +
+        encodeURIComponent(
+          $('date').value
+        )
+      );
+
+    const list =
+      data.bookings || [];
+
+    /*
+      أول تحميل: نحفظ الحجوزات الحالية
+      بدون إصدار أصوات/إشعارات عليها.
+    */
+    if (
+      pushKnownBookings.size === 0 &&
+      list.length
+    ) {
+      list.forEach(b =>
+        pushKnownBookings.add(b.id)
+      );
+
+      return;
+    }
+
+    for (const booking of list) {
+      if (
+        !pushKnownBookings.has(
+          booking.id
+        )
+      ) {
+        pushKnownBookings.add(
+          booking.id
+        );
+
+        showNewBookingNotification(
+          booking
+        );
+      }
+    }
+
+  } catch (e) {
+    console.log(
+      'Booking notification check failed'
+    );
+  }
+}
+
+if ($('enablePushBtn')) {
+  $('enablePushBtn').onclick =
+    () => enablePushNotifications(true);
+  }
 const services={signature:'الحلاقة والتشذيب المميز',classic:'الحلاقة الكلاسيكية',beard:'تهذيب اللحية الملكية'};
 let bookings=[]; let adminUnlocked=false; let adminToken=sessionStorage.getItem('yf_admin_token')||''; let adminUser=null; let scanStream=null,scanTimer=null; const adminRoute=location.pathname.replace(/\/+$/,'')==='/admin'; if(adminRoute)document.body.classList.add('admin-route');
 const currentDate=new Date().toISOString().slice(0,10); $('date').value=currentDate;
