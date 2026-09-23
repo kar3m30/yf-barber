@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>YF — لوحة الإدارة</title>
+  <style>
+    :root{--bg:#0b0b0c;--card:#151517;--line:#2a2a2d;--text:#f4f1e9;--muted:#aaa7a0;--gold:#c9a86a;--red:#e85b5b;--green:#65c58a}
+    *{box-sizing:border-box}body{margin:0;background:#0b0b0c;color:var(--text);font-family:Tahoma,Arial,sans-serif}
+    .wrap{max-width:1100px;margin:auto;padding:20px}.card{background:#151517;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+    h1,h2{margin-top:0}.login{max-width:430px;margin:8vh auto}.field{margin-bottom:13px}label{display:block;margin-bottom:7px;color:#ddd}
+    input,select,button{width:100%;padding:12px;border-radius:11px;border:1px solid var(--line);background:#0f0f11;color:var(--text);font:inherit}
+    button{cursor:pointer;background:linear-gradient(135deg,#d6b574,#9d7739);color:#111;border:0;font-weight:700}
+    button.secondary{background:#222;color:#eee;border:1px solid var(--line)}button.danger{background:#4a1717;color:#ffb2b2}
+    .message{padding:11px;border-radius:10px;margin:10px 0;display:none;white-space:pre-line}.message.show{display:block}.error{background:#3a1717;color:#ffb0b0}.success{background:#123121;color:#a9efc3}
+    .hidden{display:none!important}.top{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.top .actions{display:flex;gap:8px}
+    .filters{display:grid;grid-template-columns:1fr 1fr auto;gap:10px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+    th{color:var(--gold)}.badge{padding:5px 8px;border-radius:8px;font-size:12px}.active{background:#123121;color:#a9efc3}.cancelled{background:#3a1717;color:#ffb0b0}
+    .scanner{display:grid;grid-template-columns:1fr 1fr;gap:15px}.scan-result{padding:15px;border:1px solid var(--line);border-radius:12px;min-height:120px}
+    #reader{width:100%;max-width:520px}.muted{color:var(--muted);font-size:13px}
+    @media(max-width:700px){.filters,.scanner{grid-template-columns:1fr}.top{align-items:stretch}.top .actions{width:100%}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section id="loginView" class="card login">
+    <h1>لوحة إدارة يوسف فاروق</h1>
+    <p class="muted">سجّل الدخول لإدارة حجوزات العملاء.</p>
+    <form id="loginForm">
+      <div class="field"><label>اسم المستخدم</label><input id="username" autocomplete="username" required></div>
+      <div class="field"><label>كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <div id="loginMessage" class="message"></div>
+      <button type="submit">تسجيل الدخول</button>
+    </form>
+  </section>
+
+  <main id="dashboard" class="hidden">
+    <div class="top">
+      <div><h1>لوحة التحكم</h1><div class="muted">يوسف فاروق — إدارة الحجوزات</div></div>
+      <div class="actions"><button id="refreshButton" class="secondary">تحديث</button><button id="logoutButton" class="danger">خروج</button></div>
+    </div>
+
+    <section class="card">
+      <div class="filters">
+        <div><label>تاريخ الحجوزات</label><input id="filterDate" type="date"></div>
+        <div><label>الحالة</label><select id="filterStatus"><option value="all">الكل</option><option value="active">نشط</option><option value="cancelled">ملغي</option></select></div>
+        <button id="loadButton" style="align-self:end">عرض الحجوزات</button>
+      </div>
+      <div id="listMessage" class="message"></div>
+    </section>
+
+    <section class="card table-wrap">
+      <table>
+        <thead><tr><th>الدور</th><th>الوقت</th><th>الاسم</th><th>الهاتف</th><th>الخدمة</th><th>المقعد</th><th>الحالة</th><th>إجراء</th></tr></thead>
+        <tbody id="bookingsBody"></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>ماسح QR</h2>
+      <div class="scanner">
+        <div>
+          <div id="reader"></div>
+          <button id="startScan" class="secondary" style="margin-top:10px">تشغيل الكاميرا</button>
+        </div>
+        <div id="scanResult" class="scan-result">لم يتم مسح أي حجز بعد.</div>
+      </div>
+      <p class="muted">اسمح للمتصفح باستخدام الكاميرا عند الطلب.</p>
+    </section>
+  </main>
+</div>
+<script src="https://unpkg.com/html5-qrcode" defer></script>
+<script src="/admin.js" defer></script>
+</body>
+</html>
