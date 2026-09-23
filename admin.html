@@ -1448,12 +1448,17 @@
 
   </div>
 
+<!-- =====================================================
+     JavaScript
+====================================================== -->
 
-  <!-- =====================================================
-       JavaScript
-  ====================================================== -->
+<script>
+  window.addEventListener('error', function (e) {
+    console.error('YF Admin Error:', e.error || e.message);
+  });
+</script>
 
-  <script src="/admin.js"></script>
+<script src="/admin.js"></script>
 
 </body>
-</html
+</html>
