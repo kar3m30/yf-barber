@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صالون يوسف فاروق | YF Barber House</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="top-nav">
+    <div class="nav-container">
+      <h1 class="brand-title font-cinzel">YOUSEF FAROUK</h1>
+      <span class="brand-sub">BARBER HOUSE — صالون الحلاقة الراقي</span>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <div class="container">
+      <div class="gold-badge">👑 تجربة الحلاقة الملكية الحصرية</div>
+      <h2 class="hero-title">أناقة كلاسيكية ودقة متناهية</h2>
+      <p class="hero-desc">حجز المواعيد المسبقة وجلسة خاصة على كرسي الأستاذ يوسف فاروق شخصياً</p>
+    </div>
+  </section>
+
+  <section class="booking-section">
+    <div class="container">
+      <div class="booking-card">
+        <form id="booking-form">
+          <div class="form-group">
+            <label>الاسم الكريم:</label>
+            <input type="text" id="cust-name" required placeholder="أدخل اسمك الكريم">
+          </div>
+          <div class="form-group">
+            <label>رقم الهاتف / واتساب:</label>
+            <input type="tel" id="cust-phone" required placeholder="01xxxxxxxxx">
+          </div>
+          <div class="form-group">
+            <label>الخدمة المطلوبة:</label>
+            <select id="cust-service" required>
+              <option value="باقة VIP الملكية المتكاملة (350 ج.م)">باقة VIP الملكية المتكاملة (350 ج.م)</option>
+              <option value="باقة يوسف فاروق شعر + لحية (250 ج.م)">باقة يوسف فاروق شعر + لحية (250 ج.م)</option>
+              <option value="قص وتصفيف شعر كلاسيكي (150 ج.م)">قص وتصفيف شعر كلاسيكي (150 ج.م)</option>
+              <option value="تحديد ونحت لحية ملكي (120 ج.م)">تحديد ونحت لحية ملكي (120 ج.م)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>تاريخ وموعد الجلسة:</label>
+            <input type="date" id="cust-date" required>
+            <input type="time" id="cust-time" required style="margin-top:8px;">
+          </div>
+          <button type="submit" class="btn-submit">تأكيد الحجز واستلام التذكرة 🎟️</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- نافذة التذكرة -->
+  <div id="ticket-modal" class="modal-overlay" style="display:none;">
+    <div class="ticket-card">
+      <h3 style="color:#d4af37; font-family:'Cinzel';">YOUSEF FAROUK - TICKET</h3>
+      <p id="t-code" style="font-weight:bold; font-size:18px; margin:10px 0;"></p>
+      <p id="t-name"></p>
+      <p id="t-service" style="color:#d4af37;"></p>
+      <p id="t-datetime"></p>
+      <canvas id="t-qr" style="margin:15px auto; display:block;"></canvas>
+      <button onclick="shareTicket()" style="background:#25d366; color:#fff; padding:10px; width:100%; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">مشاركة على الواتساب 📲</button>
+      <button onclick="document.getElementById('ticket-modal').style.display='none'" style="background:transparent; color:#888; border:1px solid #444; padding:8px; width:100%; margin-top:8px; border-radius:8px;">إغلاق</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+  </html>
