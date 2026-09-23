@@ -1,0 +1,1459 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>YF — لوحة الإدارة</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    :root {
+      --bg: #07110d;
+      --bg2: #0b1712;
+      --card: #0e1d16;
+      --card2: #12251b;
+      --gold: #c7a35a;
+      --gold2: #e4c477;
+      --text: #f4efe4;
+      --muted: #a9aa9f;
+      --border: rgba(199,163,90,.24);
+      --danger: #d96b6b;
+      --success: #76b889;
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(199,163,90,.08),
+          transparent 38%
+        ),
+        var(--bg);
+
+      color: var(--text);
+      font-family: Cairo, sans-serif;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .page {
+      width: min(1200px, 94%);
+      margin: auto;
+      padding: 28px 0 60px;
+    }
+
+    /* =========================
+       Header
+    ========================= */
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 52px;
+      height: 52px;
+      border: 1px solid var(--gold);
+      border-radius: 16px;
+
+      display: grid;
+      place-items: center;
+
+      color: var(--gold2);
+      font-size: 18px;
+      font-weight: 800;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(199,163,90,.12),
+          rgba(199,163,90,.02)
+        );
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* =========================
+       Buttons
+    ========================= */
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+
+      min-height: 44px;
+      padding: 8px 16px;
+
+      border-radius: 12px;
+
+      transition:
+        .2s ease,
+        transform .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--gold);
+    }
+
+    .btn.primary {
+      color: #171108;
+      border-color: var(--gold);
+      background:
+        linear-gradient(
+          135deg,
+          var(--gold2),
+          var(--gold)
+        );
+
+      font-weight: 800;
+    }
+
+    .btn.danger {
+      border-color: rgba(217,107,107,.35);
+      color: #f0a1a1;
+    }
+
+    .btn.success {
+      border-color: rgba(118,184,137,.35);
+      color: #9bd0a8;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* =========================
+       Login
+    ========================= */
+
+    .login-screen {
+      min-height: 100vh;
+
+      display: grid;
+      place-items: center;
+
+      padding: 24px;
+    }
+
+    .login-card {
+      width: min(430px, 100%);
+
+      padding: 32px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 24px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18,37,27,.98),
+          rgba(8,18,13,.98)
+        );
+
+      box-shadow: var(--shadow);
+    }
+
+    .login-logo {
+      width: 68px;
+      height: 68px;
+
+      margin: 0 auto 18px;
+
+      display: grid;
+      place-items: center;
+
+      border:
+        1px solid var(--gold);
+
+      border-radius: 20px;
+
+      color: var(--gold2);
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .login-title {
+      text-align: center;
+      margin: 0 0 6px;
+      font-size: 24px;
+    }
+
+    .login-subtitle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 26px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+
+      color: #d9d4c8;
+      font-size: 13px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+
+      min-height: 48px;
+
+      padding: 10px 13px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 12px;
+
+      outline: none;
+
+      color: var(--text);
+      background: #09140f;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--gold);
+      box-shadow:
+        0 0 0 3px
+        rgba(199,163,90,.08);
+    }
+
+    .message {
+      display: none;
+
+      margin: 14px 0;
+
+      padding: 11px 13px;
+
+      border-radius: 10px;
+
+      font-size: 13px;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.error {
+      color: #f0a1a1;
+      background:
+        rgba(217,107,107,.08);
+      border:
+        1px solid rgba(217,107,107,.25);
+    }
+
+    .message.success {
+      color: #9bd0a8;
+      background:
+        rgba(118,184,137,.08);
+      border:
+        1px solid rgba(118,184,137,.25);
+    }
+
+    /* =========================
+       Dashboard
+    ========================= */
+
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.show {
+      display: block;
+    }
+
+    .welcome {
+      margin-bottom: 24px;
+    }
+
+    .welcome h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .welcome p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================
+       Controls
+    ========================= */
+
+    .controls {
+      display: grid;
+      grid-template-columns:
+        minmax(180px, 1fr)
+        auto
+        auto;
+
+      gap: 12px;
+
+      margin-bottom: 22px;
+    }
+
+    .control-date {
+      width: 100%;
+
+      min-height: 48px;
+
+      padding: 9px 13px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 12px;
+
+      background: var(--card);
+      color: var(--text);
+
+      outline: none;
+    }
+
+    /* =========================
+       Stats
+    ========================= */
+
+    .stats {
+      display: grid;
+
+      grid-template-columns:
+        repeat(4, minmax(0,1fr));
+
+      gap: 12px;
+
+      margin-bottom: 22px;
+    }
+
+    .stat {
+      padding: 18px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          145deg,
+          var(--card2),
+          var(--card)
+        );
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-value {
+      margin-top: 5px;
+
+      color: var(--gold2);
+
+      font-size: 27px;
+      font-weight: 800;
+    }
+
+    /* =========================
+       Main Grid
+    ========================= */
+
+    .grid {
+      display: grid;
+
+      grid-template-columns:
+        minmax(0, 1.8fr)
+        minmax(280px, .9fr);
+
+      gap: 18px;
+    }
+
+    .card {
+      border:
+        1px solid var(--border);
+
+      border-radius: 20px;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(18,37,27,.94),
+          rgba(10,22,16,.96)
+        );
+
+      box-shadow: var(--shadow);
+
+      overflow: hidden;
+    }
+
+    .card-head {
+      padding: 18px 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom:
+        1px solid rgba(199,163,90,.12);
+
+      gap: 10px;
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    /* =========================
+       Bookings
+    ========================= */
+
+    .booking-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .booking {
+      padding: 15px;
+
+      border:
+        1px solid rgba(199,163,90,.15);
+
+      border-radius: 15px;
+
+      background:
+        rgba(6,15,11,.55);
+    }
+
+    .booking-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+
+      margin-bottom: 10px;
+    }
+
+    .booking-name {
+      font-weight: 800;
+    }
+
+    .booking-queue {
+      color: var(--gold2);
+      font-weight: 800;
+    }
+
+    .booking-info {
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+      gap: 7px 14px;
+
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+    .booking-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+
+      margin-top: 13px;
+    }
+
+    .small-btn {
+      min-height: 36px;
+
+      padding: 6px 11px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 9px;
+
+      color: var(--text);
+      background: #0a1710;
+
+      font-size: 12px;
+    }
+
+    /* =========================
+       Status
+    ========================= */
+
+    .status {
+      display: inline-flex;
+
+      align-items: center;
+
+      padding: 4px 9px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+
+      border:
+        1px solid var(--border);
+    }
+
+    .status.waiting {
+      color: #dfc785;
+    }
+
+    .status.serving {
+      color: #9bd0a8;
+      border-color:
+        rgba(118,184,137,.25);
+    }
+
+    .status.done {
+      color: #aaa;
+    }
+
+    .status.cancelled {
+      color: #e09a9a;
+      border-color:
+        rgba(217,107,107,.25);
+    }
+
+    /* =========================
+       Next
+    ========================= */
+
+    .next-box {
+      text-align: center;
+    }
+
+    .next-number {
+      font-size: 52px;
+
+      color: var(--gold2);
+
+      font-weight: 800;
+
+      line-height: 1.2;
+
+      margin: 12px 0;
+    }
+
+    .next-name {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* =========================
+       Scanner
+    ========================= */
+
+    .scanner {
+      display: grid;
+      gap: 10px;
+    }
+
+    .scanner-video {
+      width: 100%;
+
+      aspect-ratio: 1 / 1;
+
+      object-fit: cover;
+
+      background: #020705;
+
+      border-radius: 14px;
+
+      border:
+        1px solid var(--border);
+    }
+
+    .scanner-result {
+      display: none;
+
+      padding: 14px;
+
+      border-radius: 13px;
+
+      background:
+        rgba(199,163,90,.06);
+
+      border:
+        1px solid var(--border);
+    }
+
+    .scanner-result.show {
+      display: block;
+    }
+
+    /* =========================
+       User Management
+    ========================= */
+
+    .users-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .user-row {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 12px;
+
+      padding: 12px;
+
+      border:
+        1px solid rgba(199,163,90,.13);
+
+      border-radius: 12px;
+    }
+
+    .user-name {
+      font-weight: 700;
+    }
+
+    .user-meta {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* =========================
+       Empty
+    ========================= */
+
+    .empty {
+      padding: 35px 15px;
+
+      text-align: center;
+
+      color: var(--muted);
+
+      font-size: 13px;
+    }
+
+    /* =========================
+       Overlay
+    ========================= */
+
+    .overlay {
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 100;
+
+      display: none;
+
+      place-items: center;
+
+      padding: 20px;
+
+      background:
+        rgba(2,7,5,.82);
+
+      backdrop-filter:
+        blur(8px);
+    }
+
+    .overlay.show {
+      display: grid;
+    }
+
+    .overlay-card {
+      width: min(500px,100%);
+
+      max-height: 90vh;
+
+      overflow: auto;
+
+      padding: 22px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 20px;
+
+      background: var(--card2);
+
+      box-shadow: var(--shadow);
+    }
+
+    .overlay-head {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 16px;
+    }
+
+    .overlay-head h3 {
+      margin: 0;
+    }
+
+    /* =========================
+       Responsive
+    ========================= */
+
+    @media (max-width: 850px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns:
+          repeat(2, minmax(0,1fr));
+      }
+
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .controls .control-date {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: 92%;
+        padding-top: 18px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .brand-title {
+        font-size: 17px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .booking-info {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .controls .control-date {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       تسجيل الدخول
+  ====================================================== -->
+
+  <section
+    id="loginScreen"
+    class="login-screen"
+  >
+
+    <div class="login-card">
+
+      <div class="login-logo">
+        YF
+      </div>
+
+      <h1 class="login-title">
+        يوسف فاروق
+      </h1>
+
+      <div class="login-subtitle">
+        لوحة إدارة الحجوزات
+      </div>
+
+      <form id="adminLoginForm">
+
+        <div class="field">
+          <label for="adminUsername">
+            اسم المستخدم
+          </label>
+
+          <input
+            id="adminUsername"
+            name="username"
+            type="text"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="field">
+          <label for="adminPassword">
+            كلمة المرور
+          </label>
+
+          <input
+            id="adminPassword"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <div
+          id="loginMessage"
+          class="message"
+        ></div>
+
+        <button
+          type="submit"
+          id="loginButton"
+          class="btn primary"
+          style="width:100%"
+        >
+          تسجيل الدخول
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       لوحة الإدارة
+  ====================================================== -->
+
+  <main
+    id="dashboard"
+    class="dashboard"
+  >
+
+    <div class="page">
+
+      <!-- Header -->
+
+      <header class="topbar">
+
+        <div class="brand">
+
+          <div class="brand-mark">
+            YF
+          </div>
+
+          <div>
+            <div class="brand-title">
+              يوسف فاروق
+            </div>
+
+            <div
+              id="adminWelcome"
+              class="brand-subtitle"
+            >
+              لوحة الإدارة
+            </div>
+          </div>
+
+        </div>
+
+        <div class="top-actions">
+
+          <button
+            type="button"
+            id="openSiteBtn"
+            class="btn"
+          >
+            الموقع
+          </button>
+
+          <button
+            type="button"
+            id="logoutBtn"
+            class="btn danger"
+          >
+            تسجيل الخروج
+          </button>
+
+        </div>
+
+      </header>
+
+
+      <!-- Welcome -->
+
+      <section class="welcome">
+
+        <h1>
+          لوحة التحكم
+        </h1>
+
+        <p>
+          متابعة الحجوزات والطابور اليومي
+        </p>
+
+      </section>
+
+
+      <!-- Controls -->
+
+      <section class="controls">
+
+        <input
+          id="adminDate"
+          class="control-date"
+          type="date"
+        >
+
+        <button
+          type="button"
+          id="refreshBtn"
+          class="btn"
+        >
+          تحديث
+        </button>
+
+        <button
+          type="button"
+          id="nextBtn"
+          class="btn primary"
+        >
+          استدعاء التالي
+        </button>
+
+      </section>
+
+
+      <!-- Message -->
+
+      <div
+        id="adminMessage"
+        class="message"
+      ></div>
+
+
+      <!-- Stats -->
+
+      <section class="stats">
+
+        <div class="stat">
+
+          <div class="stat-label">
+            إجمالي الحجوزات
+          </div>
+
+          <div
+            id="totalCount"
+            class="stat-value"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="stat">
+
+          <div class="stat-label">
+            في الانتظار
+          </div>
+
+          <div
+            id="waitingCount"
+            class="stat-value"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="stat">
+
+          <div class="stat-label">
+            قيد الخدمة
+          </div>
+
+          <div
+            id="servingCount"
+            class="stat-value"
+          >
+            0
+          </div>
+
+        </div>
+
+        <div class="stat">
+
+          <div class="stat-label">
+            تمت الخدمة
+          </div>
+
+          <div
+            id="doneCount"
+            class="stat-value"
+          >
+            0
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Main Grid -->
+
+      <section class="grid">
+
+
+        <!-- الحجوزات -->
+
+        <div class="card">
+
+          <div class="card-head">
+
+            <h2>
+              حجوزات اليوم
+            </h2>
+
+            <span
+              id="selectedDateLabel"
+              class="brand-subtitle"
+            ></span>
+
+          </div>
+
+          <div class="card-body">
+
+            <div
+              id="bookingList"
+              class="booking-list"
+            ></div>
+
+          </div>
+
+        </div>
+
+
+        <!-- الجانب -->
+
+        <aside>
+
+          <!-- التالي -->
+
+          <div class="card">
+
+            <div class="card-head">
+
+              <h2>
+                الدور الحالي
+              </h2>
+
+            </div>
+
+            <div
+              class="card-body next-box"
+            >
+
+              <div
+                id="currentQueue"
+                class="next-number"
+              >
+                —
+              </div>
+
+              <div
+                id="currentName"
+                class="next-name"
+              >
+                لا يوجد عميل قيد الخدمة
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div style="height:18px"></div>
+
+
+          <!-- QR Scanner -->
+
+          <div class="card">
+
+            <div class="card-head">
+
+              <h2>
+                قارئ QR
+              </h2>
+
+            </div>
+
+            <div class="card-body">
+
+              <div class="scanner">
+
+                <video
+                  id="scannerVideo"
+                  class="scanner-video"
+                  playsinline
+                  muted
+                ></video>
+
+                <button
+                  type="button"
+                  id="startScannerBtn"
+                  class="btn primary"
+                >
+                  تشغيل الكاميرا
+                </button>
+
+                <button
+                  type="button"
+                  id="stopScannerBtn"
+                  class="btn"
+                >
+                  إيقاف الكاميرا
+                </button>
+
+                <label
+                  class="btn"
+                  style="text-align:center"
+                >
+                  قراءة صورة QR
+                  <input
+                    id="qrFileInput"
+                    type="file"
+                    accept="image/*"
+                    hidden
+                  >
+                </label>
+
+                <div
+                  id="scannerMessage"
+                  class="message"
+                ></div>
+
+                <div
+                  id="scannerResult"
+                  class="scanner-result"
+                ></div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div style="height:18px"></div>
+
+
+          <!-- Push -->
+
+          <div class="card">
+
+            <div class="card-head">
+
+              <h2>
+                إشعارات الحجوزات
+              </h2>
+
+            </div>
+
+            <div class="card-body">
+
+              <button
+                type="button"
+               id="enablePushBtn"
+                class="btn"
+                style="width:100%"
+              >
+                تفعيل إشعارات الحجوزات
+              </button>
+
+              <div
+                id="pushMessage"
+                class="message"
+              ></div>
+
+            </div>
+
+          </div>
+
+
+          <!-- إدارة المستخدمين -->
+
+          <div
+            id="usersCard"
+            style="display:none;margin-top:18px"
+            class="card"
+          >
+
+            <div class="card-head">
+
+              <h2>
+                مستخدمو الإدارة
+              </h2>
+
+              <button
+                type="button"
+                id="addUserBtn"
+                class="small-btn"
+              >
+                إضافة
+              </button>
+
+            </div>
+
+            <div class="card-body">
+
+              <div
+                id="usersList"
+                class="users-list"
+              ></div>
+
+            </div>
+
+          </div>
+
+        </aside>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <!-- =====================================================
+       تفاصيل QR
+  ====================================================== -->
+
+  <div
+    id="bookingOverlay"
+    class="overlay"
+  >
+
+    <div class="overlay-card">
+
+      <div class="overlay-head">
+
+        <h3>
+          بيانات الحجز
+        </h3>
+
+        <button
+          type="button"
+          id="closeBookingOverlay"
+          class="small-btn"
+        >
+          إغلاق
+        </button>
+
+      </div>
+
+      <div
+        id="overlayBookingDetails"
+      ></div>
+
+      <div
+        id="overlayBookingActions"
+        style="display:flex;gap:8px;flex-wrap:wrap;margin-top:15px"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       إضافة مستخدم
+  ====================================================== -->
+
+  <div
+    id="userOverlay"
+    class="overlay"
+  >
+
+    <div class="overlay-card">
+
+      <div class="overlay-head">
+
+        <h3>
+          إضافة مستخدم
+        </h3>
+
+        <button
+          type="button"
+          id="closeUserOverlay"
+          class="small-btn"
+        >
+          إغلاق
+        </button>
+
+      </div>
+
+      <form id="userForm">
+
+        <div class="field">
+
+          <label>
+            الاسم
+          </label>
+
+          <input
+            id="newUserName"
+            type="text"
+            required
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            اسم المستخدم
+          </label>
+
+          <input
+            id="newUsername"
+            type="text"
+            required
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            كلمة المرور
+          </label>
+
+          <input
+            id="newUserPassword"
+            type="password"
+            required
+          >
+
+        </div>
+
+        <div class="field">
+
+          <label>
+            الصلاحية
+          </label>
+
+          <select id="newUserRole">
+
+            <option value="admin">
+              مدير
+            </option>
+
+            <option value="owner">
+              مالك
+            </option>
+
+          </select>
+
+        </div>
+
+        <div
+          id="userMessage"
+          class="message"
+        ></div>
+
+        <button
+          type="submit"
+          class="btn primary"
+          style="width:100%"
+        >
+          إنشاء المستخدم
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       JavaScript
+  ====================================================== -->
+
+  <script src="/admin.js"></script>
+
+</body>
+</html
