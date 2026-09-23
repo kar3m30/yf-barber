@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>لوحة الإدارة | صالون يوسف فاروق YF Barber</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+</head>
+<body class="admin-body">
+
+  <!-- Admin Login Overlay -->
+  <div id="login-overlay" class="modal-overlay">
+    <div class="wood-card login-card text-center">
+      <div class="login-crest">🛡</div>
+      <h2 class="font-cairo">تسجيل دخول الإدارة</h2>
+      <p class="login-sub">صالون يوسف فاروق — YF Barber House</p>
+      <form id="login-form">
+        <div id="login-error" class="error-banner hidden"></div>
+        <input type="password" id="admin-pin" class="pin-input font-cinzel" placeholder="رمز المرور (1234)" autofocus required>
+        <button type="submit" class="btn-gold btn-block" style="margin-top:16px; padding:12px;">دخول لوحة التحكم</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Main Dashboard -->
+  <div id="admin-app" class="hidden">
+    <header class="admin-header">
+      <div class="container header-flex">
+        <div class="brand">
+          <div class="brand-crest">✂</div>
+          <div>
+            <span class="brand-name font-cinzel">YF BARBER ADMIN</span>
+            <span class="brand-sub">إدارة حجوزات يوسف فاروق</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="btn-refresh" class="btn-outline">🔄 تحديث</button>
+          <button id="btn-open-scanner" class="btn-gold">📷 قارئ QR</button>
+          <a href="index.html" class="btn-outline">موقع الحجز ←</a>
+          <button id="btn-logout" class="btn-danger">خروج</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container admin-main">
+      <div id="call-alert" class="call-alert hidden">
+        <div class="alert-icon">🔔</div>
+        <div>
+          <div style="font-size:12px; color:#f5e396; font-weight:700;">تم استدعاء العميل الآن!</div>
+          <div id="called-customer-info" style="font-size:18px; font-weight:900;"></div>
+        </div>
+      </div>
+
+      <div class="admin-top-grid">
+        <div class="wood-card call-card">
+          <div>
+            <span class="kicker">الدور المباشر</span>
+            <h3>استدعاء العميل التالي (على الكرسي)</h3>
+            <p>يرن جرس التنبيه وينقل أول عميل في الانتظار فورًا إلى الكرسي.</p>
+          </div>
+          <button id="btn-call-next" class="btn-call-big gold-gradient-bg">
+            استدعاء العميل التالي 🔔
+          </button>
+        </div>
+
+        <div class="stats-row">
+          <div class="wood-card stat-box">
+            <span class="stat-label">حجوزات اليوم</span>
+            <span class="stat-val font-cinzel" id="stat-total">0</span>
+          </div>
+          <div class="wood-card stat-box active-chair">
+            <span class="stat-label">على الكرسي الآن</span>
+            <span class="stat-val font-cinzel" id="stat-in-chair">#—</span>
+            <span class="stat-sub" id="stat-chair-name">لا يوجد</span>
+          </div>
+          <div class="wood-card stat-box">
+            <span class="stat-label">في الانتظار</span>
+            <span class="stat-val font-cinzel text-gold" id="stat-waiting">0</span>
+          </div>
+          <div class="wood-card stat-box">
+            <span class="stat-label">تم الانتهاء</span>
+            <span class="stat-val font-cinzel text-emerald" id="stat-done">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings Table -->
+      <div class="wood-card table-wrapper">
+        <div class="table-header">
+          <div class="table-title">قائمة الحجوزات والمواعيد</div>
+          <input type="date" id="admin-date-picker" class="admin-date-input">
+        </div>
+        <div class="table-responsive">
+          <table class="bookings-table">
+            <thead>
+              <tr>
+                <th>الدور</th>
+                <th>رمز الحجز</th>
+                <th>العميل</th>
+                <th>الهاتف</th>
+                <th>الخدمة</th>
+                <th>الموعد</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="admin-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>صالون يوسف فاروق | YF Barber House</title>
+  <meta name="description" content="حجز موعد فاخر في صالون يوسف فاروق - YF Barber House مع بطاقة حجز فورية ورمز QR">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-crest">✂</div>
+        <div>
+          <h1 class="brand-title font-cinzel">YOUSEF FAROUK</h1>
+          <span class="brand-sub">BARBER HOUSE — صالون الحلاقة الراقي</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#booking-section" class="active">حجز موعد</a>
+        <a href="#services-section">الخدمات</a>
+        <a href="#reviews-section">التقييمات</a>
+        <a href="admin.html" class="nav-admin-link">لوحة الإدارة 🛡️</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container hero-content">
+      <div class="gold-badge">👑 تجربة الحلاقة الملكية الحصرية</div>
+      <h2 class="hero-title font-cairo">أناقة كلاسيكية، دقة متناهية، واهتمام بأدق التفاصيل</h2>
+      <p class="hero-desc">
+        جلسة خاصة ومواعيد محددة بدقة على كرسي الأستاذ <strong>يوسف فاروق</strong> شخصيًا. نضمن لك تجربة هادئة بدون ازدحام (حد أقصى شخصان لكل موعد).
+      </p>
+      
+      <!-- Live Queue Display -->
+      <div class="queue-status-bar" id="live-queue-bar">
+        <div class="queue-item">
+          <span class="q-label">على الكرسي الآن:</span>
+          <span class="q-val text-gold font-cairo" id="q-current-chair">شاغر حالياً ✂</span>
+        </div>
+        <div class="q-divider"></div>
+        <div class="queue-item">
+          <span class="q-label">في الانتظار اليوم:</span>
+          <span class="q-val font-cinzel" id="q-waiting-count">0</span>
+        </div>
+        <div class="q-divider"></div>
+        <div class="queue-item">
+          <span class="q-label">ساعات العمل:</span>
+          <span class="q-val font-cinzel">12:00 PM – 01:00 AM</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Section -->
+  <section class="booking-section" id="booking-section">
+    <div class="container">
+      <div class="booking-card wood-card">
+        <div class="card-ribbon"></div>
+        
+        <div class="card-header text-center">
+          <span class="section-tag">احجز دورك الآن</span>
+          <h2 class="section-title font-cinzel">ROYAL APPOINTMENT</h2>
+          <p class="section-desc">المواعيد متاحة يومًا بيوم لضمان أعلى مستويات الالتزام</p>
+        </div>
+
+        <form id="booking-form" class="booking-form">
+          <!-- Step 1: Customer Details -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="cust-name">الاسم الكريم <span class="req">*</span></label>
+              <input type="text" id="cust-name" required placeholder="مثال: أحمد محمود" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="cust-phone">رقم الهاتف / الواتساب <span class="req">*</span></label>
+              <input type="tel" id="cust-phone" required placeholder="01xxxxxxxxx" dir="ltr" autocomplete="tel">
+            </div>
+          </div>
+
+          <!-- Step 2: Choose Service -->
+          <div class="form-group">
+            <label>اختر الخدمة الملكية <span class="req">*</span></label>
+            <div class="services-grid" id="services-options">
+              <!-- Rendered by app.js -->
+            </div>
+            <input type="hidden" id="selected-service-id" required>
+          </div>
+
+          <!-- Step 3: Date & Slot -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="booking-date">تاريخ الموعد <span class="req">*</span></label>
+              <input type="date" id="booking-date" required>
+            </div>
+            <div class="form-group">
+              <label>الموعد المتاح (12:00 م – 01:00 ص) <span class="req">*</span></label>
+              <div class="slots-container" id="slots-container">
+                <span class="placeholder-text">يرجى اختيار التاريخ أولاً لعرض الأوقات</span>
+              </div>
+              <input type="hidden" id="selected-time-slot" required>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label for="booking-notes">ملاحظات إضافية (اختياري)</label>
+            <input type="text" id="booking-notes" placeholder="أي طلب خاص أو تسريحة معينة تفضلها...">
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-action">
+            <button type="submit" id="btn-submit-booking" class="btn-submit gold-gradient-bg">
+              <span>تأكيد الحجز والحصول على التذكرة الملكية</span>
+              <span class="btn-icon">🎟️</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews & Feedback Section -->
+  <section class="reviews-section" id="reviews-section">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">⭐ آراء وتجارب الرواد</span>
+        <h2 class="section-title font-cinzel">ماذا يقول عملاء صالون يوسف فاروق؟</h2>
+        <p class="section-desc">تقييمات موثقة وحصرية من عملاء أكملوا جلساتهم واستمتعوا بالخدمة الملكية</p>
+      </div>
+
+      <!-- Reviews Carousel -->
+      <div class="carousel-container wood-card" id="reviews-carousel-box">
+        <div class="carousel-track" id="carousel-track">
+          <!-- Populated dynamically by app.js -->
+        </div>
+
+        <div class="carousel-controls">
+          <div class="carousel-dots" id="carousel-dots"></div>
+          <div class="carousel-arrows">
+            <button type="button" class="btn-arrow" id="btn-prev-review" title="السابق">❯</button>
+            <button type="button" class="btn-arrow" id="btn-next-review" title="التالي">❮</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Review Form (Verified for completed customers) -->
+      <div class="review-submit-card wood-card" id="review-submit-card">
+        <div class="card-ribbon"></div>
+        <h3 class="submit-title">✍️ شاركنا رأيك بعد إتمام جلستك</h3>
+        <p class="submit-desc">حرصًا على الشفافية والمصداقية، التقييم متاح للعملاء الذين أكملوا خدمتهم في الصالون.</p>
+
+        <!-- Verification Step -->
+        <div id="verify-step">
+          <div class="verify-input-group">
+            <input type="text" id="verify-booking-input" placeholder="أدخل رمز الحجز (مثل YF-1042) أو رقم هاتفك..." />
+            <button type="button" id="btn-verify-booking" class="btn-gold">تحقق من الخدمة</button>
+          </div>
+          <p id="verify-msg" class="verify-msg hidden"></p>
+        </div>
+
+        <!-- Rating Form (Hidden until verified) -->
+        <form id="review-form" class="review-form hidden">
+          <div class="verified-user-badge">
+            <span class="verified-icon">✓ تم التحقق:</span>
+            <span id="verified-customer-name" style="font-weight:bold; color:#fff;"></span>
+            <span id="verified-service-name" style="color:#d4af37; font-size:12px;"></span>
+          </div>
+
+          <div class="form-group">
+            <label>تقييمك للخدمة:</label>
+            <div class="star-rating" id="star-rating">
+              <span class="star" data-val="1">★</span>
+              <span class="star" data-val="2">★</span>
+              <span class="star" data-val="3">★</span>
+              <span class="star" data-val="4">★</span>
+              <span class="star" data-val="5">★</span>
+              <span class="rating-text" id="rating-text">ممتاز 👑</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>انطباعك وتعليقك:</label>
+            <textarea id="review-comment" rows="3" required placeholder="اكتب رأيك عن جودة الحلاقة، دقة الموعد، وتعاملك مع يوسف فاروق..."></textarea>
+          </div>
+
+          <button type="submit" id="btn-submit-review" class="btn-submit gold-gradient-bg">نشر التقييم في الصالون</button>
+        </form>
+
+        <div id="review-success-msg" class="review-success hidden">
+          ✅ شكرًا جزيلاً لك! تم حفظ ونشر تقييمك بنجاح في قائمة آراء العملاء.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Ticket Card Modal -->
+  <div id="ticket-modal" class="modal-overlay hidden">
+    <div class="ticket-wrapper">
+      <div class="royal-ticket wood-card" id="printable-ticket">
+        <div class="ticket-header">
+          <div class="ticket-brand">
+            <span class="t-crest">✂</span>
+            <span class="t-title font-cinzel">YOUSEF FAROUK</span>
+            <span class="t-sub">ROYAL BARBER HOUSE</span>
+          </div>
+          <div class="ticket-code-pill font-cinzel" id="t-code">YF-0000</div>
+        </div>
+
+        <div class="ticket-body">
+          <div class="t-queue-box">
+            <span class="t-queue-title">رقم الدور في هذا الموعد</span>
+            <span class="t-queue-number font-cinzel" id="t-queue">#1</span>
+            <span class="t-queue-sub">الحد الأقصى شخصان لكل فترة</span>
+          </div>
+
+          <div class="t-grid">
+            <div class="t-item">
+              <span class="t-lbl">اسم العميل:</span>
+              <span class="t-val" id="t-name">--</span>
+            </div>
+            <div class="t-item">
+              <span class="t-lbl">الحلاق:</span>
+              <span class="t-val text-gold">يوسف فاروق شخصيًا</span>
+            </div>
+            <div class="t-item">
+              <span class="t-lbl">الخدمة:</span>
+              <span class="t-val" id="t-service">--</span>
+            </div>
+            <div class="t-item">
+              <span class="t-lbl">السعر والمدة:</span>
+              <span class="t-val" id="t-price-duration">--</span>
+            </div>
+            <div class="t-item">
+              <span class="t-lbl">التاريخ والموعد:</span>
+              <span class="t-val font-cinzel" id="t-datetime">--</span>
+            </div>
+            <div class="t-item">
+              <span class="t-lbl">الحالة:</span>
+              <span class="t-val text-emerald">مؤكد ومحجوز ✓</span>
+            </div>
+          </div>
+
+          <!-- QR Code Container -->
+          <div class="qr-box">
+            <canvas id="ticket-qr-canvas"></canvas>
+            <span class="qr-caption">أبرز هذا الرمز عند دخول الصالون لمسحه فورًا</span>
+          </div>
+        </div>
+
+        <div class="ticket-actions">
+          <button id="btn-download-ticket" class="btn-gold">📥 حفظ التذكرة كصورة</button>
+          <button id="btn-share-whatsapp" class="btn-whatsapp">📲 مشاركة عبر واتساب</button>
+          <button id="btn-close-ticket" class="btn-outline">إغلاق</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

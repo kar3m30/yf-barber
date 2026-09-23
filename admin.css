@@ -1,0 +1,45 @@
+/* Admin CSS */
+.admin-body { background: #0b0805; color: #e8dfd8; min-height: 100vh; }
+.login-card { max-width: 380px; width: 100%; padding: 40px 30px; margin: 0 auto; }
+.login-crest { width: 50px; height: 50px; border-radius: 50%; background: #241a12; border: 1px solid var(--gold-primary); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 22px; }
+.login-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+.pin-input { width: 100%; padding: 14px; background: #140e09; border: 1px solid var(--border-gold); border-radius: 12px; color: #fff; font-size: 20px; text-align: center; letter-spacing: 4px; outline: none; }
+.btn-block { width: 100%; display: block; }
+.admin-header { background: #140e09; border-bottom: 1px solid var(--border-gold); padding: 12px 0; }
+.header-flex { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.btn-danger { background: #7f1d1d; color: #fca5a5; border: 1px solid #991b1b; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; }
+.admin-main { padding: 24px 0; }
+.call-alert { background: #2b1d0c; border: 1px solid var(--gold-primary); border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.admin-top-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.call-card { padding: 24px; border-radius: 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+.kicker { font-size: 11px; color: var(--gold-primary); font-weight: 700; text-transform: uppercase; }
+.btn-call-big { padding: 16px; border: none; border-radius: 12px; font-weight: 900; font-size: 16px; cursor: pointer; font-family: inherit; }
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat-box { padding: 16px; border-radius: 14px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.stat-label { font-size: 11px; color: var(--text-muted); }
+.stat-val { font-size: 24px; font-weight: 900; color: #fff; margin-top: 4px; }
+.stat-sub { font-size: 11px; color: var(--gold-primary); }
+.stat-box.active-chair { background: #261a10; border-color: var(--gold-primary); }
+.table-wrapper { border-radius: 16px; padding: 20px; overflow: hidden; }
+.table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.table-title { font-weight: 800; color: #fff; font-size: 15px; }
+.admin-date-input { background: #140e09; border: 1px solid var(--border-gold); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 12px; outline: none; }
+.table-responsive { overflow-x: auto; }
+.bookings-table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
+.bookings-table th { padding: 10px; border-bottom: 1px solid var(--border-gold); color: var(--gold-light); font-weight: 700; }
+.bookings-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+.badge-confirmed { background: rgba(212, 175, 55, 0.15); color: var(--gold-light); }
+.badge-in_chair { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+.badge-completed { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+.badge-cancelled { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+.action-btn-row { display: flex; gap: 4px; }
+.btn-sm { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; }
+.btn-sm-chair { background: #2563eb; color: #fff; }
+.btn-sm-done { background: #059669; color: #fff; }
+.btn-sm-cancel { background: #dc2626; color: #fff; }
+@media (max-width: 768px) {
+  .admin-top-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+}
