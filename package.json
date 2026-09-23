@@ -1,18 +1,18 @@
 {
-  "name": "yf-yousef-farouk-online",
-  "version": "1.0.0",
+  "name": "yf-barber",
+  "version": "3.0.0",
   "private": true,
-  "description": "يوسف فاروق - Online luxury barber booking system",
+  "description": "يوسف فاروق - نظام حجز الحلاق",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": "24.x"
   },
   "dependencies": {
-    "express": "^5.1.0",
     "@libsql/client": "^0.15.15",
+    "express": "^5.1.0",
     "web-push": "^3.6.7"
   }
 }
