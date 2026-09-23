@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#3b2416">
+<title>يوسف فاروق | حجز موعد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">YF</span><div><b>يوسف فاروق</b><small>BARBER HOUSE</small></div></div>
+  <a class="admin-link" href="/admin.html">لوحة الإدارة</a>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div class="hero-overlay">
+      <p class="eyebrow">CLASSIC • LUXURY • BARBER</p>
+      <h1>احجز موعدك بسهولة</h1>
+      <p>اختر الحلاق والخدمة والموعد المناسب، وسيظهر لك كرت الحجز مع رمز QR مباشرة.</p>
+    </div>
+  </section>
+
+  <section id="bookingPanel" class="card">
+    <div class="section-title"><span>01</span><div><h2>بيانات الحجز</h2><p>املأ البيانات التالية</p></div></div>
+    <form id="bookingForm">
+      <label>اسم العميل<input id="customerName" required placeholder="اكتب الاسم"></label>
+      <label>رقم الهاتف<input id="phone" required inputmode="tel" placeholder="01xxxxxxxxx"></label>
+      <label>الحلاق<select id="barber" required></select></label>
+      <label>الخدمة<select id="service" required></select></label>
+      <label>التاريخ<input id="bookingDate" type="date" required></label>
+      <label>الموعد<select id="bookingTime" required><option value="">اختر التاريخ والحلاق أولاً</option></select></label>
+      <button class="primary" type="submit">تأكيد الحجز</button>
+      <p id="error" class="error"></p>
+    </form>
+  </section>
+
+  <section id="ticket" class="ticket card hidden"></section>
+</main>
+
+<footer>© يوسف فاروق — جميع الحقوق محفوظة</footer>
+<script src="/app.js"></script>
+</body>
+</html>

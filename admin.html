@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>يوسف فاروق | الإدارة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<div id="login" class="wrap">
+  <div class="box login-box">
+    <div class="logo">YF</div><h1>لوحة إدارة يوسف فاروق</h1>
+    <input id="user" placeholder="اسم المستخدم" autocomplete="username">
+    <input id="pass" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+    <button onclick="login()">دخول</button><p id="loginErr"></p>
+  </div>
+</div>
+
+<div id="app" class="wrap hidden">
+  <header class="admin-head">
+    <div><b>لوحة الإدارة</b><small>متابعة الحجوزات والطابور</small></div>
+    <button class="ghost" onclick="logout()">خروج</button>
+  </header>
+
+  <section class="box controls">
+    <label>التاريخ<input id="date" type="date"></label>
+    <label>الحلاق<select id="barber"></select></label>
+    <button onclick="loadBookings()">تحديث</button>
+    <button onclick="nextBooking()">استدعاء التالي</button>
+  </section>
+
+  <section class="box current">
+    <h2>العميل المستدعى الآن</h2><div id="current">لا يوجد عميل مستدعى</div>
+  </section>
+
+  <section class="box scanner">
+    <h2>قارئ QR</h2>
+    <p>اضغط تشغيل الكاميرا ثم وجّهها إلى رمز الحجز.</p>
+    <div id="reader"></div>
+    <button onclick="startScanner()">تشغيل الكاميرا</button>
+    <div id="scanResult"></div>
+  </section>
+
+  <section class="box">
+    <h2>الحجوزات</h2>
+    <div id="list" class="table-wrap"></div>
+  </section>
+</div>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="/admin.js"></script>
+</body>
+</html>
