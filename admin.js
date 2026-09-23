@@ -184,6 +184,7 @@ function statusClass(status)
   ========================================================= */
 
   async function login(event) {
+     console.log('LOGIN BUTTON WORKS');
     event.preventDefault();
 
     const username = String($('adminUsername')?.value || '').trim();
