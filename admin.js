@@ -94,9 +94,9 @@ function escapeHTML(value)
   function statusName(status) {
     return STATUS[status] || status || '—';
   }
+function statusClass(status) 
+  return `status-${status || 'unknown'}`;
 
-  function statusClass(status) {
-    return `status-${status || 'unknown'}`;
   }
 
   function setMessage(text, type = '') {
