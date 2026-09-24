@@ -1,33 +1,29 @@
 {
   "version": 2,
-  "builds": }
-      {
-  "src": "server.js",
-  "use": "@vercel/node",
-  "config": {
-    "includeFiles": [
-      "index.html",
-      "style.css",
-      "app.js",
-      "admin.html",
-      "admin.css",
-      "admin.js"
-    ]
-  }
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "index.html",
+          "style.css",
+          "app.js",
+          "admin.html",
+          "admin.css",
+          "admin.js"
+        ]
+      }
     }
-  [
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/server.js"
     },
     {
-      "src": "/admin",
-      "dest": "/admin.html"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/server.js"
     }
   ]
 }
