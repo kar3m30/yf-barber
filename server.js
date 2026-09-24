@@ -114,16 +114,7 @@ async function ensureDatabase() {
         await tursoClient.execute(`CREATE TABLE IF NOT EXISTS bookings (
       ...
     );`);
-
-    try {
-      await tursoClient.execute(`ALTER TABLE bookings ADD COLUMN queue_number INTEGER DEFAULT 0`);
-    } catch (e) {
-      if (!String(e.message || '').toLowerCase().includes('duplicate column')) {
-        console.error('queue_number migration:', e);
-      }
-    }
-
-    await tursoClient.execute(`CREATE TABLE IF NOT EXISTS reviews (
+  await tursoClient.execute(`CREATE TABLE IF NOT EXISTS reviews (
     await tursoClient.execute(`CREATE TABLE IF NOT EXISTS reviews (
       id TEXT PRIMARY KEY,
       booking_id TEXT,
