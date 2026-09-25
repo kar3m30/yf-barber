@@ -119,7 +119,11 @@ function serviceFromLegacyName(value) {
 function mapLegacyBooking(row) {
   const service = serviceFromLegacyName(row.service);
   const rawStatus = String(row.status || 'waiting').toLowerCase();
-  const status = rawStatus === 'serving' ? 'in_chair' : rawStatus === 'done' ? 'completed' : rawStatus;
+  const status = rawStatus === 'waiting' || rawStatus === 'pending' ? 'confirmed'
+    : rawStatus === 'serving' || rawStatus === 'in_chair' ? 'in_chair'
+    : rawStatus === 'done' || rawStatus === 'completed' ? 'completed'
+    : rawStatus === 'cancelled' ? 'cancelled'
+    : 'confirmed';
   return {
     id: row.id,
     token: row.token,
@@ -344,18 +348,37 @@ app.post('/api/bookings', async (req, res) => {
 });
 
 app.patch('/api/bookings/:id/status', async (req, res) => {
-  const { id } = req.params; const { status } = req.body || {};
+  const { id } = req.params;
+  const { status } = req.body || {};
   if (!VALID_STATUSES.has(status)) return res.status(400).json({ success: false, error: 'حالة غير صحيحة' });
+
   if (tursoClient) {
     if (!(await requireDb(res))) return;
     try {
-      await tursoClient.execute({ sql: 'UPDATE bookings SET status = ? WHERE id = ?', args: [status, id] });
-      return res.json({ success: true });
+      const dbStatus = bookingSchema === 'legacy'
+        ? ({ confirmed: 'waiting', in_chair: 'serving', completed: 'done', cancelled: 'cancelled' }[status] || status)
+        : status;
+
+      const result = await tursoClient.execute({
+        sql: 'UPDATE bookings SET status = ? WHERE id = ?',
+        args: [dbStatus, id]
+      });
+
+      if (!result.rowsAffected) {
+        return res.status(404).json({ success: false, error: 'الحجز غير موجود' });
+      }
+      return res.json({ success: true, status });
+    } catch (e) {
+      console.error('PATCH /api/bookings/:id/status error:', e);
+      return res.status(500).json({ success: false, error: 'تعذر تحديث حالة الحجز' });
     }
-    catch (e) { console.error(e); return res.status(500).json({ success: false, error: 'تعذر تحديث الحالة' }); }
   }
+
   if (isProduction) return res.status(503).json({ success: false, error: 'قاعدة البيانات غير متاحة حالياً' });
-  const b = memoryBookings.find(x => x.id === id); if (!b) return res.status(404).json({ success: false, error: 'الحجز غير موجود' }); b.status = status; return res.json({ success: true });
+  const b = memoryBookings.find(x => x.id === id);
+  if (!b) return res.status(404).json({ success: false, error: 'الحجز غير موجود' });
+  b.status = status;
+  return res.json({ success: true, status });
 });
 
 app.get('/api/health', async (req, res) => {

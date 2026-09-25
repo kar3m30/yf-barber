@@ -116,6 +116,19 @@
     </main>
   </div>
 
+  <!-- QR Scanner Modal -->
+  <div id="qr-scanner-modal" class="modal-overlay hidden">
+    <div class="wood-card" style="width:min(92vw,520px); padding:20px; position:relative;">
+      <button id="btn-close-scanner" class="btn-danger" style="position:absolute; top:12px; left:12px;">إغلاق</button>
+      <h2 class="font-cairo" style="margin:0 0 8px;">قارئ رمز QR</h2>
+      <p id="qr-scan-msg" style="margin:0 0 15px; color:#ccc;">وجّه الكاميرا نحو رمز QR...</p>
+      <div style="overflow:hidden; border-radius:14px; background:#000; width:100%; aspect-ratio:4/3;">
+        <video id="qr-video" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
+      </div>
+      <canvas id="qr-scan-canvas" hidden></canvas>
+    </div>
+  </div>
+
   <script src="admin.js"></script>
 </body>
 </html>

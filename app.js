@@ -172,6 +172,51 @@ function setupFormEvents() {
   });
 }
 
+function renderBookingQr(booking) {
+  const canvas = document.getElementById('ticket-qr-canvas');
+  const box = canvas?.closest('.qr-box');
+  if (!canvas || !box) return;
+
+  const code = String(booking.bookingCode || booking.token || '').trim();
+  const oldFallback = box.querySelector('.qr-fallback');
+  oldFallback?.remove();
+
+  canvas.hidden = false;
+  const ctx = canvas.getContext('2d');
+  ctx?.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (typeof QRCode === 'undefined' || typeof QRCode.toCanvas !== 'function') {
+    canvas.hidden = true;
+    const img = document.createElement('img');
+    img.className = 'qr-fallback';
+    img.alt = 'QR Code';
+    img.width = 180;
+    img.height = 180;
+    img.referrerPolicy = 'no-referrer';
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=8&data=${encodeURIComponent(code)}`;
+    box.insertBefore(img, box.querySelector('.qr-caption'));
+    return;
+  }
+
+  QRCode.toCanvas(
+    canvas,
+    code,
+    { width: 180, height: 180, margin: 2, errorCorrectionLevel: 'H' },
+    (err) => {
+      if (!err) return;
+      canvas.hidden = true;
+      const img = document.createElement('img');
+      img.className = 'qr-fallback';
+      img.alt = 'QR Code';
+      img.width = 180;
+      img.height = 180;
+      img.referrerPolicy = 'no-referrer';
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=8&data=${encodeURIComponent(code)}`;
+      box.insertBefore(img, box.querySelector('.qr-caption'));
+    }
+  );
+}
+
 function showTicketModal(booking) {
   document.getElementById('t-code').innerText = booking.bookingCode;
   document.getElementById('t-queue').innerText = '#' + booking.queueNumber;
@@ -179,8 +224,7 @@ function showTicketModal(booking) {
   document.getElementById('t-service').innerText = booking.serviceName;
   document.getElementById('t-price-duration').innerText = `${booking.servicePrice} ج.م (${booking.serviceDuration} دقيقة)`;
   document.getElementById('t-datetime').innerText = `${booking.date} | ${booking.timeSlot}`;
-  const canvas = document.getElementById('ticket-qr-canvas');
-  if (canvas && typeof QRCode !== 'undefined') QRCode.toCanvas(canvas, booking.bookingCode, { width: 140, margin: 1 });
+  renderBookingQr(booking);
   document.getElementById('ticket-modal')?.classList.remove('hidden');
 }
 
